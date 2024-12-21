@@ -45,13 +45,13 @@ module.exports.loginUser = async (req, res, next) => {
     const user = await userModel.findOne({ email }).select('+password');
 
     if (!user) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: 'User not exist !!!' });
     }
 
     const isMatch = await user.comparePassword(password);
 
     if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid email or password' });
+        return res.status(401).json({ message: 'Invalid password' });
     }
 
     const token = user.generateAuthToken();
