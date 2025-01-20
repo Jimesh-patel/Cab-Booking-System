@@ -75,8 +75,8 @@ module.exports.getAutoCompleteSuggestions = async (input) => {
             throw new Error('Unable to fetch suggestions');
         }
     } catch (err) {
-        console.error(err);
-        throw err;
+        // console.error(err);
+        // throw err;
     }
 }
 

@@ -91,9 +91,18 @@ const LiveRouteTracking = (props) => {
         return <div>Loading Maps</div>;
     }
 
+    const options = {
+        fullscreenControl: false,
+        zoomControl: false,
+        mapTypeControl: false,
+        streetViewControl: false,
+        gestureHandling: 'greedy' 
+    };
+
     return (
         isLoaded ? (
             <GoogleMap
+                options={options}
                 mapContainerStyle={containerStyle}
                 center={currentPosition}
                 zoom={15}

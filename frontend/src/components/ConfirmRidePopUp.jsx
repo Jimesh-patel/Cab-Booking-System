@@ -4,7 +4,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
 const ConfirmRidePopUp = (props) => {
-    const [ otp, setOtp ] = useState('')
+    const [otp, setOtp] = useState('')
     const navigate = useNavigate()
 
     const submitHander = async (e) => {
@@ -34,39 +34,46 @@ const ConfirmRidePopUp = (props) => {
                 props.setRidePopupPanel(false)
             }}><i className="text-3xl text-gray-200 ri-arrow-down-wide-line"></i></h5>
             <h3 className='text-2xl font-semibold mb-5'>Confirm this ride to Start</h3>
-            <div className='flex items-center justify-between p-3 border-2 border-yellow-400 rounded-lg mt-4'>
-                <div className='flex items-center gap-3 '>
-                    <img className='h-12 rounded-full object-cover w-12' src="https://i.pinimg.com/236x/af/26/28/af26280b0ca305be47df0b799ed1b12b.jpg" alt="" />
-                    <h2 className='text-lg font-medium capitalize'>{props.ride?.user.fullname.firstname}</h2>
+            <div className='flex items-center justify-between p-3 bg-yellow-400 rounded-lg mt-4'>
+                <div className='flex items-center gap-3'>
+                    <img className='h-12 rounded-full object-cover w-12' src="https://cdn-icons-png.flaticon.com/512/4439/4439947.png" alt="" />
+                    <h2 className='text-lg font-medium'>{props.ride?.user.fullname.firstname + " " + props.ride?.user.fullname.lastname}</h2>
                 </div>
-                <h5 className='text-lg font-semibold'>2.2 KM</h5>
+                <h5 className='text-lg font-semibold'>{props.ride?.distance < 1000 ? `${props.ride?.distance} meters` : `${(props.ride?.distance / 1000).toFixed(2)} KM`}</h5>
             </div>
             <div className='flex gap-2 justify-between flex-col items-center'>
-                <div className='w-full mt-5'>
+                <div className='w-full mt-4'>
                     <div className='flex items-center gap-5 p-3 border-b-2'>
-                        <i className="ri-map-pin-user-fill"></i>
+                        <i className="ri-map-pin-user-fill text-2xl"></i>
                         <div>
-                            <h3 className='text-lg font-medium'>562/11-A</h3>
-                            <p className='text-sm -mt-1 text-gray-600'>{props.ride?.pickup}</p>
+                            <h3 className='text-lg font-medium'>{props.ride?.pickup?.split(' ')[0]}</h3>
+                            <p className='text-sm -mt-1 text-gray-600'>{props.ride?.pickup?.split(' ').slice(1).join(' ')}</p>
                         </div>
                     </div>
                     <div className='flex items-center gap-5 p-3 border-b-2'>
-                        <i className="text-lg ri-map-pin-2-fill"></i>
+                        <i className="ri-map-pin-user-fill text-2xl"></i>
                         <div>
-                            <h3 className='text-lg font-medium'>562/11-A</h3>
-                            <p className='text-sm -mt-1 text-gray-600'>{props.ride?.destination}</p>
+                            <h3 className='text-lg font-medium'>{props.ride?.destination?.split(' ')[0]}</h3>
+                            <p className='text-sm -mt-1 text-gray-600'>{props.ride?.destination?.split(' ').slice(1).join(' ')}</p>
+                        </div>
+                    </div>
+                    <div className='flex items-center gap-5 p-3 border-b-2'>
+                        <i className="ri-currency-line text-2xl"></i>
+                        <div>
+                            <h3 className='text-lg font-medium'>₹ {props.ride?.fare} </h3>
                         </div>
                     </div>
                     <div className='flex items-center gap-5 p-3'>
-                        <i className="ri-currency-line"></i>
+                        <i className="ri-time-line text-2xl"></i>
                         <div>
-                            <h3 className='text-lg font-medium'>₹{props.ride?.fare} </h3>
-                            <p className='text-sm -mt-1 text-gray-600'>Cash Cash</p>
+                            <h3 className='text-lg font-medium'>
+                                {Math.floor(props.ride?.duration / 3600)}h  {Math.floor((props.ride?.duration % 3600) / 60)}m  {props.ride?.duration % 60} s
+                            </h3>
                         </div>
                     </div>
                 </div>
 
-                <div className='mt-6 w-full'>
+                <div className='w-full'>
                     <form onSubmit={submitHander}>
                         <input value={otp} onChange={(e) => setOtp(e.target.value)} type="text" className='bg-[#eee] px-6 py-4 font-mono text-lg rounded-lg w-full mt-3' placeholder='Enter OTP' />
 
