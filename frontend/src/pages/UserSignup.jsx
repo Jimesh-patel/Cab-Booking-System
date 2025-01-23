@@ -2,45 +2,64 @@ import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import { UserDataContext } from '../context/UserContext'
+import { toast } from "react-toastify";
 
 
 
 const UserSignup = () => {
-  const [ email, setEmail ] = useState('')
-  const [ password, setPassword ] = useState('')
-  const [ firstName, setFirstName ] = useState('')
-  const [ lastName, setLastName ] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
   const { user, setUser } = useContext(UserDataContext)
 
 
   const submitHandler = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
+  
     const newUser = {
       fullname: {
         firstname: firstName,
-        lastname: lastName
+        lastname: lastName,
       },
-      email: email,
-      password: password
+      email,
+      password,
+    };
+  
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BASE_URL}/users/register`,
+        newUser
+      );
+  
+      if (response.status === 200) {
+        const data = response.data;
+        setUser(data.user);
+        localStorage.setItem("token", data.token); 
+        toast.success("Registration successful!");
+        navigate("/home");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          toast.error(error.response.data.message);
+        } else if (error.response.status === 400) {
+          toast.error(error.response.data.errors[0].msg);
+        } else {
+          toast.error("Internal server error");
+        }
+      } else {
+        toast.error("An unexpected error occurred. Please try again.");
+      }
+    } finally {
+      setLoading(false);
     }
-
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
-    
-    if(response.status === 201){
-      const data = response.data
-      setUser(data.user)
-      localStorage,setItem('token', data.token)
-      navigate('/home')
-    }
-
-    setEmail('')
-    setFirstName('')
-    setLastName('')
-    setPassword('')
-
-  }
+  };
+  
+  
   return (
     <div>
       <div className='p-7 h-screen flex flex-col justify-between'>
@@ -101,12 +120,14 @@ const UserSignup = () => {
 
             <button
               className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
-            >Create account</button>
+            >
+              {loading ? "Loading ..." : "Create Account"}
+            </button>
 
           </form>
           <p className='text-center'>Already have a account? <Link to='/login' className='text-blue-600'>Login here</Link></p>
         </div>
-        
+
       </div>
     </div >
   )

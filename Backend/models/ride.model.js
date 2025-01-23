@@ -38,12 +38,19 @@ const rideSchema = new mongoose.Schema({
         type: Number,
     }, // in meters
 
+    vehicleType: {
+        type: String,
+        enum: [ 'car', 'moto', 'auto' ],
+    },
+
     paymentID: {
         type: String,
     },
+
     orderId: {
         type: String,
     },
+
     signature: {
         type: String,
     },

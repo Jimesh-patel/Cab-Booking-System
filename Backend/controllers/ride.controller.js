@@ -15,30 +15,27 @@ module.exports.createRide = async (req, res) => {
 
     try {
         const ride = await rideService.createRide({ user: req.user._id, pickup, destination, vehicleType });
-        res.status(201).json(ride);
-        
         const pickupCoordinates = await mapService.getAddressCoordinate(pickup);
-    
-        const captainsInRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng, 100);
+        const captainsInRadius = await mapService.getCaptainsInTheRadius(pickupCoordinates.ltd, pickupCoordinates.lng, vehicleType, 100);
 
-        ride.otp = ""
+        if (captainsInRadius.length === 0) {
+            return res.status(400).json({ message: "No captains available, Try other vehicle !" });
+        }
 
+        ride.otp = "";
         const rideWithUser = await rideModel.findOne({ _id: ride._id }).populate('user');
         captainsInRadius.map(captain => {
-
             sendMessageToSocketId(captain.socketId, {
                 event: 'new-ride',
                 data: rideWithUser
-            })
+            });
+        });
 
-        })
-
+        res.status(201).json(ride);
     } catch (err) {
-
-        console.log(err);
-        return res.status(500).json({ message: err.message });
+        console.error(err);
+        return res.status(500).json({ message: "Internal Server Error" });
     }
-
 };
 
 module.exports.getFare = async (req, res) => {

@@ -13,6 +13,7 @@ import { useContext } from 'react';
 import { UserDataContext } from '../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import LiveTracking from '../components/LiveTracking';
+import {toast} from 'react-toastify';
 
 const Home = () => {
     const [pickup, setPickup] = useState('')
@@ -42,7 +43,6 @@ const Home = () => {
     const { user } = useContext(UserDataContext)
 
     useEffect(() => {
-        console.log(user)
         socket.emit("join", { userType: "user", userId: user._id })
     }, [])
 
@@ -54,7 +54,6 @@ const Home = () => {
     })
 
     socket.on('ride-started', ride => {
-        console.log("ride")
         setWaitingForDriver(false)
         navigate('/riding', { state: { ride } })
     })
@@ -183,20 +182,23 @@ const Home = () => {
         })
 
         setFare(response.data)
-
     }
 
     async function createRide() {
-        const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
-            pickup,
-            destination,
-            vehicleType
-        }, {
-            headers: {
-                Authorization: `Bearer ${localStorage.getItem('token')}`
-            }
-        })
-
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+                pickup,
+                destination,
+                vehicleType
+            }, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                }
+            })
+        } catch (error) {
+            console.log(error)
+            toast.error(error.response?.data?.message || 'Internal Server Error');
+        }
     }
 
     return (
@@ -257,21 +259,25 @@ const Home = () => {
                     />
                 </div>
             </div>
-            <div ref={vehiclePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white'>
+            <div ref={vehiclePanelRef} className='fixed w-full z-40 bottom-0 translate-y-full bg-white'>
                 <VehiclePanel
                     selectVehicle={setVehicleType}
-                    fare={fare} setConfirmRidePanel={setConfirmRidePanel} setVehiclePanel={setVehiclePanel} />
+                    fare={fare}
+                    setConfirmRidePanel={setConfirmRidePanel}
+                    setVehiclePanel={setVehiclePanel}
+                />
             </div>
-            <div ref={confirmRidePanelRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white'>
+            <div ref={confirmRidePanelRef} className='fixed w-full z-30 bottom-0 translate-y-full bg-white'>
                 <ConfirmRide
                     createRide={createRide}
                     pickup={pickup}
                     destination={destination}
                     fare={fare}
                     vehicleType={vehicleType}
-                    setConfirmRidePanel={setConfirmRidePanel} setVehicleFound={setVehicleFound} />
+                    setConfirmRidePanel={setConfirmRidePanel} 
+                    setVehicleFound={setVehicleFound} />
             </div>
-            <div ref={vehicleFoundRef} className='fixed w-full z-10 bottom-0 translate-y-full bg-white'>
+            <div ref={vehicleFoundRef} className='fixed w-full z-20 bottom-0 translate-y-full bg-white'>
                 <LookingForDriver
                     createRide={createRide}
                     pickup={pickup}
@@ -280,7 +286,7 @@ const Home = () => {
                     vehicleType={vehicleType}
                     setVehicleFound={setVehicleFound} />
             </div>
-            <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0 bg-white'>
+            <div ref={waitingForDriverRef} className='fixed w-full z-10 bottom-0  translate-y-full bg-white'>
                 <WaitingForDriver
                     ride={ride}
                     vehicleType={vehicleType}

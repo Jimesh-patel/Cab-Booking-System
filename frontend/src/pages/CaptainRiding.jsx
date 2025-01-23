@@ -36,7 +36,7 @@ const CaptainRiding = () => {
                 <LiveRouteTracking ride={rideData} />
             </div>
 
-            <div className='h-[20%] items-center justify-between bg-yellow-400'
+            <div className='h-[30%] items-center justify-between bg-yellow-400'
                 onClick={() => {
                     setFinishRidePanel(true)
                 }}
@@ -44,10 +44,11 @@ const CaptainRiding = () => {
                 <h5 className='p-1 text-center ' onClick={() => { }}>
                     <i className="text-3xl text-gray-800 ri-arrow-up-wide-line"></i>
                 </h5>
-                <div className='flex items-center justify-between px-6 py-2'>
-                    <h4 className='text-xl font-semibold'>
-                        <LiveDistanceTime ride={rideData} />
-                    </h4>
+                <div className='my-4'>
+                    <LiveDistanceTime ride={rideData} />
+                </div>
+                <div className='flex items-center justify-center px-3 py-1'>
+                    
                     <button className='bg-green-600 text-white font-semibold p-4 px-7 rounded-lg'>Complete Ride</button>
                 </div>
             </div>
