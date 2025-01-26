@@ -90,7 +90,8 @@ module.exports.getCaptainsInTheRadius = async (ltd, lng, vehicleType, radius) =>
                 $centerSphere: [[ltd, lng], radius / 6371]
             }
         },
-        'vehicle.vehicleType': vehicleType
+        'vehicle.vehicleType': vehicleType,
+        'status': 'active'
     });
 
     return captains;

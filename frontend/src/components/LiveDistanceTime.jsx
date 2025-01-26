@@ -19,7 +19,7 @@ const LiveDistanceTime = (props) => {
     }
 
     updateLocation()
-    const intervalId = setInterval(updateLocation, 10000)
+    const intervalId = setInterval(updateLocation, 1000000) // 1000 seconds
 
     return () => clearInterval(intervalId)
   }, [])

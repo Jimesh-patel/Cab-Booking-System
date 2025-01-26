@@ -78,3 +78,22 @@ module.exports.logoutCaptain = async (req, res, next) => {
 
     res.status(200).json({ message: 'Logout successfully' });
 }
+
+module.exports.changeCaptainStatus = async (req, res, next) => {
+    const { status } = req.body;
+    const validStatuses = ['active', 'inactive', 'Busy'];
+
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: 'Invalid status' });
+    }
+
+    try {
+        const captain = await captainService.changeCaptainStatus(req.captain._id, status);
+        if (!captain) {
+            return res.status(404).json({ message: 'Captain not found' });
+        }
+        res.status(200).json({ captain });
+    } catch (error) {
+        next(error);
+    }
+}

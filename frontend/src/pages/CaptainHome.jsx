@@ -50,11 +50,9 @@ const CaptainHome = () => {
     }, [])
 
     socket.on('new-ride', (data) => {
-
         setRide(data)
         console.log(data)
         setRidePopupPanel(true)
-
     })
 
     async function confirmRide() {
@@ -64,7 +62,6 @@ const CaptainHome = () => {
             rideId: ride._id,
             captainId: captain._id,
 
-
         }, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('token')}`
@@ -73,8 +70,23 @@ const CaptainHome = () => {
 
         setRidePopupPanel(false)
         setConfirmRidePopupPanel(true)
-
     }
+
+    const handleBeforeUnload = async (event) => {
+        event.preventDefault();
+        await axios.patch(
+            `${import.meta.env.VITE_BASE_URL}/captains/status`,
+            { status: 'inactive' },
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            }
+        );
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
 
 
     useGSAP(function () {

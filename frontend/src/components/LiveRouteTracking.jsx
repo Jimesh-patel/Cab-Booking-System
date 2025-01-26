@@ -56,7 +56,7 @@ const LiveRouteTracking = (props) => {
 
         updatePosition(); 
 
-        const intervalId = setInterval(updatePosition, 1000); 
+        const intervalId = setInterval(updatePosition, 1000000); // 1000 seconds
 
     }, []);
 

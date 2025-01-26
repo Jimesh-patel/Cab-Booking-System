@@ -29,5 +29,11 @@ router.get('/profile', authMiddleware.authCaptain, captainController.getCaptainP
 
 router.get('/logout', authMiddleware.authCaptain, captainController.logoutCaptain)
 
+router.patch('/status', authMiddleware.authCaptain, [
+    body('status').isIn(['active', 'inactive', 'Busy']).withMessage('Invalid status')
+], 
+    captainController.changeCaptainStatus
+);
+
 
 module.exports = router;

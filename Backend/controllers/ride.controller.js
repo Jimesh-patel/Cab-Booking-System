@@ -3,6 +3,7 @@ const { validationResult } = require('express-validator');
 const mapService = require('../services/maps.service');
 const { sendMessageToSocketId } = require('../socket');
 const rideModel = require('../models/ride.model');
+const captainService = require('../services/captain.service');
 
 
 module.exports.createRide = async (req, res) => {
@@ -64,7 +65,7 @@ module.exports.confirmRide = async (req, res) => {
 
     try {
         const ride = await rideService.confirmRide({ rideId, captain: req.captain });
-
+        const captain = await captainService.changeCaptainStatus(req.captain._id, 'busy');
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-confirmed',
             data: ride
@@ -112,7 +113,7 @@ module.exports.endRide = async (req, res) => {
 
     try {
         const ride = await rideService.endRide({ rideId, captain: req.captain });
-        console.log("Ending Ride : " + ride);
+        const captain = await captainService.changeCaptainStatus(req.captain._id, 'active');
         sendMessageToSocketId(ride.user.socketId, {
             event: 'ride-ended',
             data: ride

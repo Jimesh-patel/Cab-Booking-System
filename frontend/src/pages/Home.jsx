@@ -171,6 +171,10 @@ const Home = () => {
 
 
     async function findTrip() {
+        if(!pickup || !destination) {
+            toast.error('Please enter both pickup and destination')
+            return
+        }
         setVehiclePanel(true)
         setPanelOpen(false)
 
@@ -232,6 +236,7 @@ const Home = () => {
                             className='bg-[#eee] px-12 py-2 text-lg rounded-lg w-full'
                             type="text"
                             placeholder='Add a pick-up location'
+                            required
                         />
                         <input
                             onClick={() => {
@@ -242,7 +247,9 @@ const Home = () => {
                             onChange={handleDestinationChange}
                             className='bg-[#eee] px-12 py-2 text-lg rounded-lg w-full mt-3'
                             type="text"
-                            placeholder='Enter your destination' />
+                            placeholder='Enter your destination' 
+                            required
+                        />
                     </form>
                     <button
                         onClick={findTrip}
