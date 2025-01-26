@@ -124,3 +124,12 @@ module.exports.endRide = async (req, res) => {
         return res.status(500).json({ message: err.message });
     } 
 }
+
+module.exports.getOngoingRidesForUser = async (req, res) => {
+    try {
+        const rides = await rideService.getOngoingRidesForUser(req.user._id);
+        return res.status(200).json(rides);
+    } catch (err) {
+        return res.status(500).json({ message: err.message });
+    }
+}

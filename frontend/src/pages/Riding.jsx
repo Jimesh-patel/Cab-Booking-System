@@ -50,7 +50,10 @@ const Riding = () => {
                     </div>
                 </div>
                 {/* Payment Button */}
-                <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'>
+                <button className='w-full mt-5 bg-green-600 text-white font-semibold p-2 rounded-lg'
+                    onClick={() => {
+                        navigate('/home')
+                    }}>
                     Pay ₹ {ride?.fare || "N/A"}
                 </button>
             </div>

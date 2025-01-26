@@ -159,3 +159,16 @@ module.exports.endRide = async ({ rideId, captain }) => {
 
     return ride;
 }
+
+module.exports.getOngoingRidesForUser = async (userId) => {
+    if (!userId) {
+        throw new Error('User ID is required');
+    }
+
+    const rides = await rideModel.find({
+        user: userId,
+        status: 'ongoing'
+    }).populate('captain');
+
+    return rides;
+}

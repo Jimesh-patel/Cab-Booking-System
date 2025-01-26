@@ -39,6 +39,11 @@ router.post('/end-ride',
     rideController.endRide
 )
 
+router.get('/get-user-rides',
+    authMiddleware.authUser,
+    rideController.getOngoingRidesForUser
+)
+
 
 
 module.exports = router;

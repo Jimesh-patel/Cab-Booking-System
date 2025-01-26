@@ -13,6 +13,7 @@ import CaptainProtectWrapper from './pages/CaptainProtectWrapper'
 import CaptainLogout from './pages/CaptainLogout'
 import Riding from './pages/Riding'
 import CaptainRiding from './pages/CaptainRiding'
+import OnGoingRides from './pages/ongoingRides'
 
 import 'remixicon/fonts/remixicon.css'
 import { ToastContainer } from "react-toastify";
@@ -29,6 +30,7 @@ const App = () => {
         <Route path='/' element={<Start />} />
         <Route path='/login' element={<UserLogin />} />
         <Route path='/riding' element={<Riding />} />
+        <Route path='/ongoing-rides' element={<OnGoingRides />} />
         <Route path='/captain-riding' element={<CaptainRiding />} />
 
         <Route path='/signup' element={<UserSignup />} />
